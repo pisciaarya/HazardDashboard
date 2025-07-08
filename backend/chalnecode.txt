@@ -1,0 +1,320 @@
+1.
+app.py
+from flask import Flask, jsonify
+from models import db, LocalUnits, Provinces, Rivers, Settlements, Roads, \
+                  IndexSheet, Fire1, Fire2, Districts, Boundary
+from config import Config
+from sqlalchemy import func
+import json
+from geoalchemy2.shape import to_shape
+from geoalchemy2.types import Geometry as GeometryType
+from shapely.geometry import mapping
+from flask_cors import CORS  # Import CORS
+
+app = Flask(__name__)
+app.config.from_object(Config)
+
+# ===== CORS CONFIGURATION =====
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:3000", "https://yourdomain.com"],  
+        "methods": ["GET", "OPTIONS"], 
+        "allow_headers": ["Content-Type"]
+    }
+})
+db.init_app(app)
+
+@app.route('/')
+def home():
+    return "Welcome to WebGIS Project!"
+
+def model_to_dict(instance):
+    if not instance:
+        return None
+    data = {}
+    for column in instance.__table__.columns:
+        # Check for geometry columns using the imported GeometryType
+        if isinstance(column.type, GeometryType):
+            continue
+        data[column.name] = getattr(instance, column.name)
+    return data
+
+def create_model_endpoint(model):
+    def endpoint():
+        try:
+            records = db.session.query(model).all()
+            
+            result = []
+            for record in records:
+                item = model_to_dict(record)
+                # Convert geometry to GeoJSON
+                if hasattr(record, 'geom') and record.geom:
+                    shape = to_shape(record.geom)
+                    item['geometry'] = mapping(shape)
+                result.append(item)
+            return jsonify(result)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    
+    endpoint.__name__ = f"endpoint_{model.__tablename__}"
+    return endpoint
+
+from flask import request
+
+@app.route('/api/local_units')
+def get_local_units():
+    page = request.args.get('page', 1, type=int)  # Default: first page
+    per_page = 100  # Show 100 records at a time
+    
+    # Get paginated results
+    paginated_data = LocalUnits.query.paginate(page=page, per_page=per_page)
+    
+    results = []
+    for record in paginated_data.items:
+        item = {
+            "fid": record.fid,
+            "district": record.district,
+            # Add other needed fields
+        }
+        if record.geom:
+            shape = to_shape(record.geom)
+            item["geometry"] = mapping(shape)
+        results.append(item)
+    
+    return jsonify({
+        "data": results,
+        "pagination": {
+            "total_records": paginated_data.total,
+            "total_pages": paginated_data.pages,
+            "current_page": page,
+            "next_page": page + 1 if page < paginated_data.pages else None
+        }
+    })
+
+# Register all endpoints
+endpoints = [
+    (LocalUnits, 'local_units'),
+    (Provinces, 'provinces'),
+    (Rivers, 'rivers'),
+    (Settlements, 'settlements'),
+    (Roads, 'roads'),
+    (IndexSheet, 'index_sheet'),
+    (Fire1, 'fire1'),
+    (Fire2, 'fire2'),
+    (Districts, 'districts'),
+    (Boundary, 'boundary')
+]
+
+for model, endpoint_name in endpoints:
+    app.add_url_rule(f'/api/{endpoint_name}', 
+                   view_func=create_model_endpoint(model),
+                   methods=['GET'])
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
+
+
+
+
+
+
+
+
+
+2.
+models.py
+from flask_sqlalchemy import SQLAlchemy
+from geoalchemy2.types import Geometry as GeometryType
+from sqlalchemy import Column, Integer, String, Float, BigInteger
+
+db = SQLAlchemy()
+
+class LocalUnits(db.Model):
+    __tablename__ = 'local_units'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOLYGON', srid=4326))
+    fid_1 = Column(Integer)
+    state_code = Column(Integer)
+    district = Column(String)
+    gapa_napa = Column(String)
+    type_gn = Column(String)
+    province = Column(String)
+
+class Provinces(db.Model):
+    __tablename__ = 'provinces'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOLYGON', srid=4326))
+    fid_1 = Column(Integer)
+    first_stat = Column(Integer)
+
+class Rivers(db.Model):
+    __tablename__ = 'rivers'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTILINESTRING', srid=4326))
+    fnode = Column(Integer)
+    tnode = Column(Integer)
+    river_code = Column(Integer)
+    shape_len = Column(Float)
+
+class Settlements(db.Model):
+    __tablename__ = 'settlements'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOINT', srid=4326))
+    vdc_name = Column(String)
+    dist_name = Column(String)
+
+class Roads(db.Model):
+    __tablename__ = 'roads'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTILINESTRING', srid=4326))
+    fnode = Column(Integer)
+    tnode = Column(Integer)
+    road_code = Column(String)
+    type = Column(String)
+    shape_len = Column(Float)
+
+class IndexSheet(db.Model):
+    __tablename__ = 'index_sheet'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOLYGON', srid=4326))
+    oid_ = Column(Integer)
+    name = Column(String)
+    folderpath = Column(String)
+    symbolid = Column(Integer)
+    altmode = Column(Integer)
+    base = Column(Integer)
+    clamped = Column(Integer)
+    extruded = Column(Integer)
+    snippet = Column(Integer)
+    popupinfo = Column(String)
+    shape_leng = Column(Float)
+    shape_area = Column(Float)
+
+class Fire2(db.Model):
+    __tablename__ = 'fire2'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOINT', srid=4326))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    brightness = Column(Float)
+    scan = Column(Float)
+    track = Column(Float)
+    acq_date = Column(BigInteger)
+    acq_time = Column(String)
+    satellite = Column(String)
+    instrument = Column(String)
+    confidence = Column(Integer)
+    version = Column(String)
+    bright_t31 = Column(Float)
+    frp = Column(Float)
+    daynight = Column(String)
+    type = Column(Integer)
+
+class Fire1(db.Model):
+    __tablename__ = 'fire1'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOINT', srid=4326))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    brightness = Column(Float)
+    scan = Column(Float)
+    track = Column(Float)
+    acq_date = Column(BigInteger)
+    acq_time = Column(String)
+    satellite = Column(String)
+    instrument = Column(String)
+    confidence = Column(Integer)
+    version = Column(String)
+    bright_t31 = Column(Float)
+    frp = Column(Float)
+    daynight = Column(String)
+
+class Districts(db.Model):
+    __tablename__ = 'districts'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOLYGON', srid=4326))
+    fid_1 = Column(Integer)
+    district = Column(String)
+    first_stat = Column(Integer)
+    first_dist = Column(String)
+
+class Boundary(db.Model):
+    __tablename__ = 'boundary'
+    fid = Column(Integer, primary_key=True)
+    geom = Column(GeometryType('MULTIPOLYGON', srid=4326))
+    fid_1 = Column(Integer)
+    id = Column(Integer)
+
+
+
+
+
+
+3.
+config.py
+class Config:
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Aarya@localhost/vulnerability_db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+
+
+
+
+
+
+
+local_units ko chai end point access garna lai
+http://127.0.0.1:5000/api/local_units → Returns first 100 records
+http://127.0.0.1:5000/api/local_units?page=2 → Returns next 100 records
+
+
+Technical Breakdown
+Key Components
+PostGIS: Stores and manages spatial data in PostgreSQL
+
+GeoAlchemy2: Bridges Python and PostGIS
+
+Shapely: Handles geometry conversions
+
+GeoJSON: The output format web systems understand
+
+
+
+Data Flow:
+
+Request hits /api/boundary
+
+Server queries PostGIS database
+
+Converts database geometry to GeoJSON
+
+Returns structured geographic data
+
+
+
+CORS Restrictions	
+from flask_cors import CORS
+CORS(app, resources={r"/api/*": {"origins": "*"}})	-----> Control which domains can access
+
+
+
+DONE:
+Built RESTful endpoints for all geographic datasets (/api/settlements, /api/roads, etc.)
+
+Configured PostgreSQL/PostGIS database connection
+
+Implemented GeoJSON output format for all spatial data
+
+
+
+
+Code Structure
+Separated concerns:
+
+models.py: Database models
+config.py: Database credentials
+app.py: API routes and logic

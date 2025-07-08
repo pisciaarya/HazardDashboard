@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>जोखिम प्रतिबिम्ब - Documentation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-map-marked-alt"></i> जोखिम प्रतिबिम्ब
+    </a>
+    <ul>
+      <li><a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a></li>
+      <li class="dropdown">
+        <a class="nav-link" href="#"><i class="fas fa-layer-group"></i> Our Work <i class="fas fa-caret-down"></i></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/map"><i class="fas fa-map"></i> Overview</a></li>
+          <li><a class="dropdown-item" href="/map?layer=realtime"><i class="fas fa-water"></i> Real-Time Data</a></li>
+          <li><a class="dropdown-item" href="/map?layer=hazards"><i class="fas fa-mountain"></i> Hazards</a></li>
+          <li><a class="dropdown-item" href="/map?layer=spatial"><i class="fas fa-bolt"></i> Analysis Tools</a></li>
+          <!-- <li><a class="dropdown-item" href="/map?layer=attribute"><i class="fas fa-fire"></i> Attribute Tools</a></li> -->
+        </ul>
+      </li>
+      <li><a class="nav-link active" href="/documentation"><i class="fas fa-file-alt"></i> Documentation</a></li>
+      <li><a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a class="nav-link" href="/info"><i class="fas fa-info"></i> </a></li>
+      <li>
+        <button id="theme-toggle" class="theme-toggle">
+          <i class="fas fa-moon"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+
+
+
+<div class="container">
+      <div class="content-card">
+        
+        </div>
+      </div>
+
+
+
+
+
+  <!-- Documentation Content -->
+  <section class="content-section">
+    <div class="container">
+      <div class="content-card">
+        
+        <h2>Documentation</h2>
+
+        
+        <div id="overview" class="doc-section">
+          <h3>1. System Overview</h3>
+          <p>The system is a mini-portal to visualize and analyze hazard vulnerability in settlements of Nepal featuring four hazard visualization maps (rivers, settlements, earthquakes, roads, wildfires) with real-time data integration from four external APIs. It includes seven spatial analysis tools and administrative boundary visualization.</p>
+          <p>Users interact through layer toggling controls, symbol-click popups with feature details, and dynamic parameter adjustments for buffer distances and hazard thresholds.</p>
+        </div>
+        
+        <div id="architecture" class="doc-section">
+          <h3>2. Architectural Implementation</h3>
+          <div class="arch-diagram">
+            <div class="arch-tier">
+              <h4>Database Tier</h4>
+              <ul>
+                <li>PostgreSQL with PostGIS extension</li>
+                <li>Stores administrative boundaries, infrastructure networks, and hazard datasets</li>
+                <li>Executes spatial operations: buffering, intersection detection, distance calculations</li>
+                <li>Manages geospatial data in WGS84 and UTM Zone 45N coordinate systems</li>
+              </ul>
+            </div>
+            <div class="arch-tier">
+              <h4>Backend Tier</h4>
+              <ul>
+                <li>Python Flask with 15+ RESTful API endpoints</li>
+                <li>Integrates real-time data from USGS, WAQI, OpenWeatherMap, and Open-Meteo APIs</li>
+                <li>Processes spatial analysis logic and converts results to GeoJSON</li>
+                <li>Manages dynamic query parameters and coordinate transformations</li>
+              </ul>
+            </div>
+            <div class="arch-tier">
+              <h4>Frontend Tier</h4>
+              <ul>
+                <li>HTML, CSS, JavaScript with Leaflet.js</li>
+                <li>Interactive layer control interfaces with dynamic popups</li>
+                <li>Parameter input controls for spatial analysis tools</li>
+                <li>Real-time data refresh mechanisms</li>
+                <li>Created Web structure and Designing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div id="hazards" class="doc-section">
+          <h3>3. Hazard Assessment Modules</h3>
+          <div class="hazard-module">
+            <h4><i class="fas fa-water"></i> Flood Exposure Analysis</h4>
+            <ul>
+              <li>User-defined buffers around river networks</li>
+              <li>Identifies settlements/local units within flood zones</li>
+              <li>Calculates percentage area affected for administrative units</li>
+            </ul>
+          </div>
+          <div class="hazard-module">
+            <h4><i class="fas fa-mountain"></i> Earthquake Impact Simulation</h4>
+            <ul>
+              <li>Magnitude-dependent risk zones with dynamic radii</li>
+              <li>Quantifies affected settlements and districts</li>
+              <li>Visualizes impact areas on interactive maps</li>
+            </ul>
+          </div>
+          <div class="hazard-module">
+            <h4><i class="fas fa-fire"></i> Wildfire Hotspot Detection</h4>
+            <ul>
+              <li>Filters fire incidents by confidence level and date</li>
+              <li>Identifies settlements within configurable proximity buffers</li>
+            </ul>
+          </div>
+          <div class="hazard-module">
+            <h4><i class="fas fa-road"></i> Road Disruption Impact</h4>
+            <ul>
+              <li>Simulates infrastructure failure scenarios</li>
+              <li>Identifies settlements within impact radii</li>
+            </ul>
+          </div>
+          
+        
+        <div id="tools" class="doc-section">
+          <h3>4. Spatial Analysis Tools</h3>
+          <div class="tools-grid">
+            <div class="tool-card">
+              <h4><i class="fas fa-walking"></i> Earthquake Impact Zone Analysis</h4>
+              <p>Identifies vulnerable group who are at high risk of earthquakes</p>
+            </div>
+            <div class="tool-card">
+              <h4><i class="fas fa-chart-bar"></i> Risk Profiler</h4>
+              <p>Analyzes administrative units by settlement density and network length</p>
+            </div>
+            <div class="tool-card">
+              <h4><i class="fas fa-wind"></i> AQI Vulnerability Assessment</h4>
+              <p>Identifies settlements within pollution impact zones</p>
+            </div>
+            <div class="tool-card">
+              <h4><i class="fas fa-border-all"></i> Administrative Unit Analysis</h4>
+              <p>Boundary retrieval and comparative risk analysis between regions</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="data" class="doc-section">
+          <h3>5. Real-Time Data Integration</h3>
+          <div class="api-grid">
+            <div class="api-card">
+              <h4><i class="fas fa-bolt"></i> USGS Earthquake API</h4>
+              <p>Seismic event visualization and impact analysis</p>
+            </div>
+            <div class="api-card">
+              <h4><i class="fas fa-smog"></i> WAQI Air Quality</h4>
+              <p>Pollution vulnerability assessment</p>
+            </div>
+            <div class="api-card">
+              <h4><i class="fas fa-cloud-sun-rain"></i> OpenWeatherMap</h4>
+              <p>Current weather conditions for flood modeling</p>
+            </div>
+            <div class="api-card">
+              <h4><i class="fas fa-history"></i> Open-Meteo</h4>
+              <p>Historical climate pattern analysis</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="operations" class="doc-section">
+          <h3>6. Key Spatial Operations</h3>
+          <ul>
+            <li>Metric buffering for flood and earthquake impact zones</li>
+            <li>Spatial intersections to identify affected settlements</li>
+            <li>Proximity analysis for fire and pollution vulnerability</li>
+            <li>Coordinate transformations between WGS84 and UTM Zone 45N</li>
+            <li>Geometric length and area calculations for infrastructure density</li>
+          </ul>
+        </div>
+        
+        <div id="workflow" class="doc-section">
+          <h3>7. User Interaction Workflow</h3>
+          <div class="workflow-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h4>Map Interface</h4>
+              <p>Users toggle hazard layers and adjust visualization parameters</p>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <h4>Feature Inspection</h4>
+              <p>Clicking map symbols triggers popups with settlement details</p>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <h4>Analysis Execution</h4>
+              <p>Users configure parameters</p>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <h4>Administrative Focus</h4>
+              <p>Users select regions for comparative risk analysis</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="innovations" class="doc-section">
+          <h3>8. Technical Innovations</h3>
+          <ul>
+            <li>Magnitude-dependent earthquake impact radii using exponential scaling</li>
+            <li>Dual-coordinate system workflow with automatic transformations</li>
+            <li>Configurable multi-hazard exposure scoring system</li>
+            <li>Administrative unit profiling with spatial-statistical reporting</li>
+          </ul>
+        </div>
+        
+        <div id="outputs" class="doc-section">
+          <h3>9. System Outputs</h3>
+          <div class="output-grid">
+            <div class="output-card">
+              <h4><i class="fas fa-map"></i> Visual Outputs</h4>
+              <ul>
+                <li>Interactive hazard maps with layer control</li>
+                <li>Dynamic risk zone visualization</li>
+                <li>Real-time data overlays</li>
+              </ul>
+            </div>
+            <div class="output-card">
+              <h4><i class="fas fa-chart-line"></i> Analytical Outputs</h4>
+              <ul>
+                <li>Settlement vulnerability scores</li>
+                <li>Infrastructure accessibility metrics</li>
+                <li>Administrative unit risk profiles</li>
+              </ul>
+            </div>
+            <div class="output-card">
+              <h4><i class="fas fa-database"></i> Data Outputs</h4>
+              <ul>
+                <li>GeoJSON feature collections</li>
+                <li>JSON-formatted statistical summaries</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Vulnerability Mapping and Risk Zonation | Nepal</p>
+    <p>Developed with <i class="fas fa-heart" style="color: #ff6b6b;"></i> for safer communities | PowerPuff Girls</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/theme-toggle.js"></script>
+</body>
+</html>

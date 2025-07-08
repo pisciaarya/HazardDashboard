@@ -1,0 +1,48 @@
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .main-nav {
+  background: #1a1a1a;
+}
+
+.dark-mode .content-card,
+.dark-mode .feature-card,
+.dark-mode .upload-container,
+.dark-mode .download-card,
+.dark-mode .feature-option {
+  background:2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select {
+  background-color: #333;
+  color: #fff;
+  border-color: #444;
+}
+
+.dark-mode .sidebar-content,
+.dark-mode .map-sidebar {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.dark-mode .popup-content {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-mode .leaflet-control-layers {
+  background-color: #2a2a2a !important;
+}
+
+.dark-mode .leaflet-control-layers label {
+  color: #e0e0e0 !important;
+}
+
+.dark-mode footer {
+  background: #1a1a1a;
+}

@@ -1,0 +1,408 @@
+/* ===== MAP CONTAINER ===== */
+.portal-container {
+  margin-top: 60px;
+  padding: 20px;
+}
+
+.map-container {
+  display: flex;
+  margin: 0 auto;
+  max-width: 1400px;
+  gap: 20px;
+  height: calc(100vh - 140px);
+  position: relative;
+  height: 100vh;
+}
+
+#map {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex: 3;
+  border: 2px solid #00bfa6;
+  border-radius: 8px;
+  z-index: 1;
+}
+
+.map-sidebar {
+  flex: 1;
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  background: #00bfa6;
+  color: white;
+  padding: 15px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.sidebar-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.sidebar-content h4 {
+  color: #00bfa6;
+  margin: 1.5rem 0 1rem;
+  font-size: 1.1rem;
+}
+
+.sidebar-content ul {
+  list-style-position: inside;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-content li {
+  margin-bottom: 0.5rem;
+}
+
+/* ===== FILTER PANEL ===== */
+.filter-panel {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.dark-mode .filter-panel {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.panel-header {
+  background: #00bfa6;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px 8px 0 0;
+}
+
+.panel-content {
+  padding: 15px;
+}
+
+.filter-group {
+  margin-bottom: 15px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #00bfa6;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: white;
+}
+
+#filter-controls {
+  background: rgba(0, 191, 166, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.dark-mode .filter-group label {
+  color: #e0e0e0;
+}
+
+/* ===== TOOLS PANEL ===== */
+.tools-panel {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.tool-btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.tool-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.1);
+}
+
+.dark-mode .tool-btn {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.dark-mode .tool-btn:hover {
+  background: #333;
+}
+
+/* ===== LEAFLET OVERRIDES ===== */
+.leaflet-control-layers {
+  background-color: #2a2a2a !important;
+  color: white !important;
+}
+
+.leaflet-control-layers label {
+  color: white !important;
+}
+
+.leaflet-control-layers-toggle {
+  background-color: #2a2a2a !important;
+}
+
+.leaflet-popup-content {
+  color: #333;
+}
+
+.dark-mode .leaflet-popup-content {
+  color: #e0e0e0;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 992px) {
+  .map-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  #map {
+    height: 500px;
+  }
+  
+  .filter-panel {
+    width: calc(100% - 40px);
+    top: 70px;
+    right: 20px;
+    left: 20px;
+  }
+  
+  .tools-panel {
+    flex-direction: row;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+/* ===== LOADING INDICATOR ===== */
+.map-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-loader.active {
+  display: flex;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #00bfa6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+
+
+/* static/css/map.css or static/css/dynamic-content.css */
+
+.portal-container {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: row; /* Arrange children in a row */
+  height: calc(100vh - 80px); /* Adjust based on your nav/footer height */
+  overflow: hidden; /* Hide overflow if content is too large */
+}
+
+.map-container {
+  flex: 3; /* Map takes even more space now, e.g., 60-70% */
+  min-width: 65%; /* Increase minimum width for the map */
+  display: flex;
+  flex-direction: row;
+  border-right: 1px solid var(--border-color); /* Separator */
+}
+
+.map-sidebar {
+  width: 300px; /* Adjust sidebar width as needed */
+  background-color: var(--sidebar-bg);
+  padding: 15px;
+  overflow-y: auto; /* Enable scrolling for sidebar content */
+  border-left: 1px solid var(--border-color);
+}
+
+.dynamic-content-panel {
+  flex: 0.8; /* Content panel takes less space, e.g., 30-35% */
+  min-width: 30%; /* Decrease minimum width for the content panel */
+  background-color: var(--content-panel-bg);
+  /* Explicitly remove top padding and margin for this panel */
+  padding-top: 0; /* Set top padding to 0 */
+  padding-right: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  margin-top: 0; /* Set top margin to 0 */
+  overflow-y: auto;
+  border-left: 1px solid var(--border-color);
+}
+
+.content-section {
+  /* Set all padding to 15px (or your desired amount), ensure no top margin */
+  padding: 15px; /* Apply consistent padding on all sides */
+  margin-top: 0; /* Ensure no top margin for the content section */
+  margin-bottom: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Ensure the first h3 inside content-section has no top margin */
+.content-section h3 {
+  color: var(--heading-color);
+  margin-top: 0; /* Remove top margin from h3 within content-section */
+  margin-bottom: 15px;
+}
+
+.content-section h3:first-child {
+  margin-top: 0; /* Remove top margin from the first heading in the section */
+}
+
+
+
+.content-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap to next line */
+}
+
+.content-buttons .btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.content-paragraph-section {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--border-color);
+}
+
+.content-paragraph-section h5 {
+  color: var(--sub-heading-color);
+  margin-bottom: 10px;
+}
+
+.content-paragraph-section ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  color: var(--text-color);
+}
+
+.content-paragraph-section ul li {
+  margin-bottom: 5px;
+}
+
+
+.my-4{
+  margin:0;
+  padding: 0;
+}
+
+
+
+
+/* Add these styles to the end of your existing map.css file */
+
+/* ===== SPATIAL TOOLS PANEL ===== */
+#spatial-tools-main .form-label strong {
+  color: #00bfa6;
+  border-bottom: 2px solid #00bfa6;
+  padding-bottom: 5px;
+  display: block;
+}
+
+#spatial-tool-inputs {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  min-height: 100px;
+  transition: all 0.3s ease-in-out;
+}
+
+#run-spatial-analysis:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+/* ===== ANALYSIS RESULTS PANEL ===== */
+#spatial-analysis-results-container {
+  border-top: 2px solid #00bfa6;
+  background-color: #1e1e1e;
+}
+
+#spatial-analysis-summary .alert {
+  background-color: #2a2a2a;
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+#spatial-analysis-summary h4 {
+  color: #00bfa6;
+}
+
+#spatial-analysis-summary .list-group-item {
+    background-color: #2a2a2a;
+    border-color: #444;
+}

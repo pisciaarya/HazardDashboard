@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>जोखिम प्रतिबिम्ब</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CORRECTED: Paths now use url_for syntax for Flask or direct static path -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/map.css">
+  <link rel="stylesheet" href="/static/css/dark-mode.css" id="theme-style">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-map-marked-alt"></i> जोखिम प्रतिबिम्ब
+    </a>
+    <ul>
+      <li><a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a></li>
+      <li class="dropdown">
+        <a class="nav-link" href="#"><i class="fas fa-layer-group"></i> Our Work <i class="fas fa-caret-down"></i></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/map"><i class="fas fa-map"></i> Overview</a></li>
+          <li><a class="dropdown-item" href="/map?layer=realtime"><i class="fas fa-water"></i> Real-Time Data</a></li>
+          <li><a class="dropdown-item" href="/map?layer=hazards"><i class="fas fa-mountain"></i> Hazards</a></li>
+          <li><a class="dropdown-item" href="/map?layer=spatial"><i class="fas fa-bolt"></i> Analysis Tools</a></li>
+          <!-- <li><a class="dropdown-item" href="/map?layer=attribute"><i class="fas fa-fire"></i> Attribute Tools</a></li> -->
+        </ul>
+      </li>
+      <li><a class="nav-link" href="/documentation"><i class="fas fa-file-alt"></i> Documentation</a></li>
+      <li><a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a class="nav-link" href="/info"><i class="fas fa-info"></i> </a></li>
+      <li>
+        <button id="theme-toggle" class="theme-toggle">
+          <i class="fas fa-moon"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+<!-- Filter Panel -->
+<div class="filter-panel" id="filter-panel">
+  <div class="panel-header">
+    <h3><i class="fas fa-filter"></i> Data Filters</h3>
+    <button id="close-filters" class="btn-close"></button>
+  </div>
+  <div class="panel-content">
+    <div class="filter-group">
+      <label for="province-filter">Province</label>
+      <select id="province-filter" class="form-select">
+        <option value="">All Provinces</option>
+        <!-- Dynamically populated -->
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="district-filter">District</label>
+      <select id="district-filter" class="form-select" disabled>
+        <option value="">All Districts</option>
+        <!-- Dynamically populated -->
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="hazard-filter">Hazard Type</label>
+      <select id="hazard-filter" class="form-select">
+        <option value="">All Hazards</option>
+        <option value="flood">Flood</option>
+        <option value="earthquake">Earthquake</option>
+        <option value="fire">Fire</option>
+        <option value="landslide">Landslide</option>
+      </select>
+    </div>
+    
+    <div class="filter-group">
+      <label for="date-filter">Time Range</label>
+      <select id="date-filter" class="form-select">
+        <option value="all">All Time</option>
+        <option value="7days">Last 7 Days</option>
+        <option value="30days">Last 30 Days</option>
+        <option value="1year">Last Year</option>
+        <option value="custom">Custom Range</option>
+      </select>
+    </div>
+    
+    <div id="custom-date-range" class="filter-group" style="display:none;">
+      <div class="d-flex gap-2">
+        <input type="date" id="start-date" class="form-control">
+        <input type="date" id="end-date" class="form-control">
+      </div>
+    </div>
+    
+    <div class="filter-actions mt-3">
+      <button id="apply-filters" class="btn btn-primary w-100">
+        <i class="fas fa-check"></i> Apply Filters
+      </button>
+      <button id="reset-filters" class="btn btn-outline-secondary w-100 mt-2">
+        <i class="fas fa-undo"></i> Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Toggle Button -->
+<button id="filter-toggle" class="tool-btn">
+  <i class="fas fa-filter"></i>
+</button>
+  
+
+  <main class="portal-container">
+    <div class="map-container">
+      <div id="map">
+        <div class="map-loader" id="map-loader">
+          <div class="loader-spinner"></div>
+        </div>
+      </div>
+    
+        
+      </div>
+    </div>
+    <div class="dynamic-content-panel" id="dynamic-content-panel"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Vulnerability Mapping and Risk Zonation | Nepal</p>
+    <p>Developed with <i class="fas fa-heart" style="color: #ff6b6b;"></i> for safer communities</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- CORRECTED: Paths now use url_for syntax for Flask or direct static path -->
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/filters.js"></script>
+  <script src="/static/js/map.js"></script>
+  <script src="/static/js/map-tools.js"></script>
+  <script src="/static/js/theme-toggle.js"></script>
+  <script src="/static/js/dynamic-content.js"></script>
+  <script src="/static/js/hazard-tools.js"></script>
+  <script src="/static/js/spatial-tool.js"></script> 
+</body>
+</html>

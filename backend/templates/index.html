@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>जोखिम प्रतिबिम्ब</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CORRECTED: Paths now use url_for syntax for Flask or direct static path -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/dark-mode.css" id="theme-style">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-map-marked-alt"></i> जोखिम प्रतिबिम्ब
+    </a>
+    <ul>
+      <li><a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a></li>
+      <li class="dropdown">
+        <a class="nav-link" href="#"><i class="fas fa-layer-group"></i> Our Work <i class="fas fa-caret-down"></i></a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/map"><i class="fas fa-map"></i> Overview</a></li>
+          <li><a class="dropdown-item" href="/map?layer=realtime"><i class="fas fa-water"></i> Real-Time Data</a></li>
+          <li><a class="dropdown-item" href="/map?layer=hazards"><i class="fas fa-mountain"></i> Hazards</a></li>
+          <li><a class="dropdown-item" href="/map?layer=spatial"><i class="fas fa-bolt"></i> Analysis Tools</a></li>
+          <!-- <li><a class="dropdown-item" href="/map?layer=attribute"><i class="fas fa-fire"></i> Attribute Tools</a></li> -->
+        </ul>
+      </li>
+      <li><a class="nav-link" href="/documentation"><i class="fas fa-file-alt"></i> Documentation</a></li>
+      <li><a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+      <li><a class="nav-link" href="/info"><i class="fas fa-info"></i> </a></li>
+      <li>
+        <button id="theme-toggle" class="theme-toggle">
+          <i class="fas fa-moon"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Vulnerability Mapping and Risk Zonation</h1>
+      <h2>Nepal</h2>
+      <p>A mini-portal to visualize and analyze hazard vulnerability in settlements of Nepal.</p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2>Key Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <i class="fas fa-map-marked-alt"></i>
+          <h3>Interactive Mapping</h3>
+          <p>Visualize various hazard vulnerabilities across Nepal's settlements with our interactive map interface.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-layer-group"></i>
+          <h3>Multiple Layers</h3>
+          <p>Toggle between different hazard layers like earthquake, and active fire data.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-search-location"></i>
+          <h3>Detailed Analysis</h3>
+          <p>Different spatial and attribute tool for hazard and vulnerability analysis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Vulnerability Mapping and Risk Zonation | Nepal</p>
+    <p>Developed with <i class="fas fa-heart" style="color: #ff6b6b;"></i> for safer communities | PowerPuff Girls</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- CORRECTED: Paths now use url_for syntax for Flask or direct static path -->
+  <script src="/static/js/main.js"></script>
+  <script src="/static/js/theme-toggle.js"></script>
+</body>
+</html>
