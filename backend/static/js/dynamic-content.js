@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p style: 'text-align: justify'>This platform is your dedicated resource for understanding and addressing natural hazard risks in Nepal's diverse settlements, empowering communities, local governments, and humanitarian organizations with critical, actionable insights.</p>
 
                     <div class="content-buttons">
-                        <a href="https://youtu.be/RHvHoyZbJrs?si=UVST0uxFV57jAMys" target="_blank" class="btn btn-success"><i class="fas fa-play-circle"></i> Watch Introduction Video</a>
+                        <a href="https://youtu.be/RHvHoyZbJrs?si=tZi2Xin7sYoWcUim" target="_blank" class="btn btn-success"><i class="fas fa-play-circle"></i> Watch Introduction Video</a>
                         <a href="/documentation" class="btn btn-info"><i class="fas fa-book-open"></i> Explore Documentation</a>
                     </div>
                     <div>
